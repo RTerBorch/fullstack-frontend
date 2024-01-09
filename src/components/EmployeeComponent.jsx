@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { createEmployee, getEmployee } from "../services/EmployeeService";
+import {
+  createEmployee,
+  getEmployee,
+  updateEmployee,
+} from "../services/EmployeeService";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EmployeeComponent = () => {
@@ -22,8 +26,8 @@ const EmployeeComponent = () => {
       getEmployee(id)
         .then((response) => {
           setFirstName(response.data.firstName);
-          setLastName(response.data.setLastName);
-          setEmail(response.data.setEmail);
+          setLastName(response.data.lastName);
+          setEmail(response.data.email);
         })
         .catch((error) => {
           console.error(error);
@@ -31,17 +35,32 @@ const EmployeeComponent = () => {
     }
   }, [id]);
 
-  function saveEmployee(e) {
+  function saveOrUpdateEmployee(e) {
     e.preventDefault();
 
     if (validateForm()) {
       const employee = { firstName, lastName, email };
       console.log(employee);
 
-      createEmployee(employee).then((response) => {
-        console.log(response.data);
-        navigator("/employees");
-      });
+      if (id) {
+        updateEmployee(id, employee)
+          .then((response) => {
+            console.log(response.data);
+            navigator("/employees");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        createEmployee(employee)
+          .then((response) => {
+            console.log(response.data);
+            navigator("/employees");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
   }
 
@@ -87,7 +106,7 @@ const EmployeeComponent = () => {
       <br />
       <br />
       <div className="row">
-        <div className="card col-md-6 offset-md-3 offset-md-3">
+        <div className="card col-md-6 offset-md-3 offset-md-3 bg-dark text-white">
           {pageTitle()}
           <div className="card-body">
             <form action="">
@@ -137,7 +156,10 @@ const EmployeeComponent = () => {
                   <div className="invalid-feedback"> {errors.email} </div>
                 )}
               </div>
-              <button className="btn btn-sucess" onClick={saveEmployee}>
+              <button
+                className="btn btn-success"
+                onClick={saveOrUpdateEmployee}
+              >
                 Submit
               </button>
             </form>
