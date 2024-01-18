@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const EC2_PUBLIC_IP = "http://51.20.37.14";
-const REST_API_URL = `${EC2_PUBLIC_IP}:8080/api/employees`;
+const REST_API_URL = "http://13.51.199.87:8080/api/employees";
 
 export const listEmployees = () => axios.get(REST_API_URL);
 
@@ -15,3 +14,6 @@ export const updateEmployee = (employeeId, employee) =>
 
 export const deleteEmployee = (employeeId) =>
   axios.delete(REST_API_URL + "/" + employeeId);
+
+
+  
